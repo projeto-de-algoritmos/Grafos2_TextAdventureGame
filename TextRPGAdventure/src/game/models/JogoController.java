@@ -1,11 +1,13 @@
 package game.models;
 
 import game.models.item.Item;
+import grafo.Aresta;
 import grafo.Grafo;
 import grafo.navegacao.Navegacao;
 import grafo.Vertice;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,38 +15,65 @@ public final class JogoController {
 
     private static JogoController jogo;
     private Jogador jogador;
+    private Chefe chefe;
     private Grafo grafo = new Grafo();
     private static InterpreteJogador interpreteJogador;
 
+    private Integer turnoAtualJogador;
+    private Integer turnoAtualJogo;
+    private Integer turnoAtualChefe;
+
+    private Boolean jogoAcabou = false;
 
     public void iniciarJogo(String nome, Integer vida, Area areaInicial){
-        boolean jogoAcabou = false;
+        iniciarJogo(nome, vida, areaInicial, null);
+    }
+
+    public void iniciarJogo(String nome, Integer vida, Area areaInicial, Chefe chefe){
+        this.chefe = chefe;
         jogador = new Jogador(nome, vida, areaInicial);
         interpreteJogador = new InterpreteJogador();
         Navegacao navegacao = new Navegacao();
         Scanner scanner = new Scanner(System.in);
+        turnoAtualJogo = 1;
+        turnoAtualChefe = 1;
+        turnoAtualJogador = 1;
 
         //Andamento do jogo - Só para no fim do jogo;
         while(!jogoAcabou){
             System.out.println("=============================================================");
+            // 0 - Printar turno atual
+            System.out.println("Turno atual: " + turnoAtualJogo);
+            System.out.println("Local do boss: " + chefe.getAreaAtual().getNome());
+
             // 1 - identifica a área atual
             Area areaAtual = identificarAreaAtual();
 
-            // 1 - descreve a área e itens
-            System.out.println(areaAtual.getDescricao());
+            if(turnoAtualJogador <= turnoAtualJogo){
 
+                // 1 - descreve a área e itens
+                System.out.println(areaAtual.getDescricao());
+                String comando = scanner.nextLine();
+                interpreteJogador.interpretarString(comando);
+            } else {
+                System.out.println("O personagem ainda não finalizou a ação !");
+            }
             // 2 - verifica e executa ação desejada - interprete
-            String comando = scanner.nextLine();
-            interpreteJogador.interpretarString(comando);
 
-            // 3 - verifica se está em batalha
-            // 4 - verifica se o jogo acabou
-            // 5 - verificações de itens e outras coisas
+            // 3 - Realiza ações do chefe
+            if(chefe != null){
+                if(turnoAtualChefe <= turnoAtualJogo){
+                    chefe.agir();
+                }
+            }
+
+            // 4 - verifica se está em batalha
+            // 5 - verifica se o jogo acabou
+            // 6 - verificações de itens e outras coisas
             jogador.verificarItensEsgotadosOuQuebrados();
 
             System.out.println("\n\n\n\n");
-
-            jogoAcabou = false;
+            turnoAtualJogo++;
         }
     }
 
@@ -152,6 +181,18 @@ public final class JogoController {
         return null;
     }
 
+    public Integer identificaDistancia(Area salaAtual, Area areaDesejada) {
+        Navegacao navegacao = new Navegacao();
+
+        Aresta caminho = navegacao.retornarCaminhoConectado(salaAtual, areaDesejada);
+
+        if(caminho != null){
+            return caminho.getPeso();
+        }
+
+        return null;
+    }
+
     public void imprimeMapaJogo(){
         grafo.imprimeGrafo();
     }
@@ -169,7 +210,44 @@ public final class JogoController {
         return areas;
     }
 
+    public Area perseguirJogador(){
+        LinkedList<Vertice> caminho = Navegacao.menorCaminho(grafo, chefe.getAreaAtual(), jogador.getAreaAtual());
+
+        Area areaAlvo = null;
+
+        if(caminho != null){
+            areaAlvo = (Area) caminho.get(1);
+        }
+
+       return areaAlvo;
+
+    }
+
     public Grafo getGrafo() {
         return grafo;
+    }
+
+    public void incrementarTurnosJogador(Integer turnosGastos){
+        this.turnoAtualJogador += turnosGastos;
+    }
+
+    public void incrementarTurnosChefe(Integer turnosGastos){
+        this.turnoAtualChefe += turnosGastos;
+    }
+
+    public void finalizarJogo(){
+        this.jogoAcabou = true;
+    }
+
+    public Jogador getJogador() {
+        return jogador;
+    }
+
+    public Integer getTurnoAtualJogador() {
+        return turnoAtualJogador;
+    }
+
+    public Integer getTurnoAtualChefe() {
+        return turnoAtualChefe;
     }
 }

@@ -1,6 +1,7 @@
 package game;
 
 import game.models.Area;
+import game.models.Chefe;
 import game.models.Imagens;
 import game.models.JogoController;
 import game.models.item.*;
@@ -53,26 +54,26 @@ public class Principal {
         jogo.addArea(garagem);
         jogo.addArea(porao);
 
-        jogo.conectarArea(salaEscura, banheiroEscuro);
-        jogo.conectarArea(banheiroEscuro, salaEscura);
+        jogo.conectarArea(2, salaEscura, banheiroEscuro);
+        jogo.conectarArea(2, banheiroEscuro, salaEscura);
         jogo.conectarArea(2,  salaEscura, garagem);
         jogo.conectarArea(2, garagem, salaEscura);
-        jogo.conectarArea(100,  salaEscura, porao);
-        jogo.conectarArea(10,  porao, salaEscura);
-        jogo.conectarArea(13, garagem, porao);
-        jogo.conectarArea(13, porao, garagem);
+        jogo.conectarArea(3, garagem, porao);
+        jogo.conectarArea(3, porao, garagem);
 
         System.out.println("\n\n\n");
 
-//        try {
-//            Arquivo.imprimeImagemAscii("olhos");
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Arquivo.imprimeImagemAscii("olhos");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-//        jogo.iniciarJogo("Caio", 15, salaEscura);
+        Chefe chefe = new Chefe("Chucky", 200, porao);
 
-        testaMenorCaminho(jogo.getGrafo(), salaEscura, porao);
+        jogo.iniciarJogo("Caio", 15, salaEscura, chefe);
+
+        //testaMenorCaminho(jogo.getGrafo(), salaEscura, porao);
     }
 
     private static void testaMenorCaminho(Grafo grafo, Vertice inicio, Vertice fim) {

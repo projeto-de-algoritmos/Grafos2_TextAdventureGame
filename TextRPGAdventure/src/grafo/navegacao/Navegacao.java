@@ -16,6 +16,8 @@ public class Navegacao {
         Dijkstra dijkstra = new Dijkstra(grafo);
         dijkstra.executar(inicio);
 
+        grafo.resetVertices();
+
         return dijkstra.menorCaminho(fim);
     }
 
@@ -125,6 +127,16 @@ public class Navegacao {
         for(Aresta areaConectada : areaAtual.getAdjacencias()){
             if (areaConectada.getDestino().getNome().toLowerCase().contains(areaDesejada.toLowerCase())) {
                 return areaConectada.getDestino();
+            }
+        }
+
+        return null;
+    }
+
+    public Aresta retornarCaminhoConectado(Area areaAtual, Area areaDesejada) {
+        for(Aresta caminho : areaAtual.getAdjacencias()){
+            if (caminho.getDestino().getNome().equals(areaDesejada.getNome())) {
+                return caminho;
             }
         }
 

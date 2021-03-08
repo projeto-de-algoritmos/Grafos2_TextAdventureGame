@@ -53,10 +53,13 @@ public class InterpreteJogador {
                        JogoController.getJogo().addItem(item);
                    }
 
+                   JogoController.getJogo().incrementarTurnosJogador(1);
+
                    return acao;
                } else {
                    System.out.println("Especifique qual item deseja pegar !");
                }
+
 
                break;
            case USAR:
@@ -68,6 +71,8 @@ public class InterpreteJogador {
                    if(item != null) {
                        item.usar();
                    }
+
+                   JogoController.getJogo().incrementarTurnosJogador(1);
 
                    return acao;
                } else {
@@ -83,6 +88,7 @@ public class InterpreteJogador {
 
                    if(item != null) {
                        if(item instanceof ItemLegivel){
+                           JogoController.getJogo().incrementarTurnosJogador(1);
                            item.usar();
                        } else {
                            System.out.println("Não é possível ler este item !");
@@ -102,9 +108,11 @@ public class InterpreteJogador {
                    Area salaAtual = JogoController.getJogo().getAreaAtualJogador();
 
                    Area areaIndicada = JogoController.getJogo().identificarAreaConectada(salaAtual, nomeSala);
+                   Integer distanciaEntreSalas = JogoController.getJogo().identificaDistancia(salaAtual, areaIndicada);
 
-                   if(areaIndicada != null){
-                        JogoController.getJogo().atualizarAreaAtual(areaIndicada);
+                   if(areaIndicada != null && distanciaEntreSalas != null){
+                       JogoController.getJogo().incrementarTurnosJogador(distanciaEntreSalas);
+                       JogoController.getJogo().atualizarAreaAtual(areaIndicada);
                    } else {
                        System.out.println("Esse movimento não é permitido !");
                    }
@@ -117,6 +125,7 @@ public class InterpreteJogador {
                break;
            case OLHAR:
                JogoController.getJogo().identificarAreaAtual().mostrarDescricaoDetalhada();
+               JogoController.getJogo().incrementarTurnosJogador(1);
                break;
            default:
                System.out.println("Esta não é uma ação válida !");
