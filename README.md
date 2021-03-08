@@ -1,7 +1,7 @@
-# Text Adventure Game
+# Text Adventure Game 2.0
 
 **Número da Lista**: -
-**Conteúdo da Disciplina**: Grafos 1
+**Conteúdo da Disciplina**: Grafos 2
 
 ## Alunos
 |Matrícula | Aluno |
@@ -10,7 +10,7 @@
 | 15/0016018  |  Lucas Oliveira Silva |
 
 ## Sobre 
-Um framework para desenvolvimento de jogos no estilo RPG de texto, todo baseado em grafos, onde é possível desenvolver diversos jogos diferentes utilizando uma hierarquia simples. 
+Uma melhoria do framework para desenvolvimento de jogos no estilo RPG de texto desenvolvido no módulo de Grafos 1, onde é possível desenvolver diversos jogos diferentes utilizando uma hierarquia simples. 
 
 ## Screenshots
 ![Print 1](Imagens/imagem1.PNG)
